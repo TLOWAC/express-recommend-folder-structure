@@ -1,0 +1,8 @@
+prisma
+dist
+node_modules
+.eslintrc.js
+tasks
+src/generated/*
+src/__tests__/*
+gulpfile.babel.js

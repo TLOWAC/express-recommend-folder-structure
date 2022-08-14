@@ -1,0 +1,76 @@
+{
+  "name": "basic-foundation-boilerplate",
+  "version": "1.0.5",
+  "main": "index.js",
+  "repository": "git@github.com:TLOWAC-REPO/typescript-basic-toolkit.git",
+  "author": "TLOWAC <leechanghun55@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "ci": "rm -rf node_modules && yarn install",
+    "release": "standard-version",
+    "release:target": "standard-version -- --release-as",
+    "test": "jest ",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint './src/**/*.{ts,tsx,js,jsx}'",
+    "prepare": "husky install",
+    "pre-commit": "yarn lint-staged",
+    "commit-msg": "yarn commitlint",
+    "pre-push": "yarn typecheck && yarn test"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^16.0.0",
+    "@commitlint/config-conventional": "^15.0.0",
+    "@types/jest": "^27.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "codecov": "^3.8.3",
+    "eslint": "^8.0.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.0",
+    "jest": "^27.3.0",
+    "lint-staged": "^12.0.0",
+    "prettier": "^2.4.1",
+    "prettier-eslint": "^13.0.0",
+    "standard-version": "^9.3.2",
+    "ts-jest": "^27.1.0",
+    "typescript": "^4.4.4"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "verbose": true,
+    "testTimeout": 30000,
+    "transform": {
+      "node_modules/variables/.+\\.(j|t)sx?$": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!variables/.*)"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    },
+    "collectCoverage": true,
+    "coverageDirectory": "<rootDir>/coverage",
+    "coverageReporters": [
+      "json",
+      "text",
+      "lcov",
+      "html"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/*.test.{js,jsx,ts,tsx}",
+      "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ]
+  }
+}

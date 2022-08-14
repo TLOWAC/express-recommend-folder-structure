@@ -1,0 +1,38 @@
+name: "🐛 Bug Report"
+title: "[ Bug ]: "
+description: "If something isn't working as expected 🤔."
+labels: ["TLOWAC: you must be fix", "TLOWAC: you may be fix"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to file a bug report! Please fill out this form as completely as possible.
+
+  - type: checkboxes
+    id: input1
+    attributes:
+      label: "💻"
+      options:
+        - label: Would you like to work on a fix?
+
+  - type: dropdown
+    attributes:
+      label: where did you find bug?
+      multiple: true
+      options:
+        - .github/workflow
+        - *.ts
+        - *.test.ts
+        - linter ( prettier, eslint, etc.. )
+        - documentation ( sry for my poor english )
+
+  - type: textarea
+    attributes:
+      label: Current and expected behavior
+      description: Describe the situation in detail.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Possible solution
+      description: "If you have suggestions on a fix for the bug. Pls tell me"

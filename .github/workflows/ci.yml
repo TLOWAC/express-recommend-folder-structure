@@ -1,0 +1,150 @@
+name: "[ Github Action ] CI "
+on:
+  push:
+    branches: [master]
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  pull_request:
+    branches: [master]
+
+jobs:
+  test: 
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ Checkout repository
+        uses: actions/checkout@v2
+
+      - name: 📦 Setup Node.js for use with actions
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: ⏳ Install node modules
+        run: yarn ci
+
+      - name: 🥾 Run integration tests
+        run: |
+          yarn test --collectCoverage
+        # bash <(curl -s https://codecov.io/bash)
+      # NOTE: If you use cypress then enabled this option
+      # Start the web server so that cypress can run e2e tests against it. Notice "&" at end, this ensures it's run in the background.
+      # - name: Start web server
+      #   run: npm start &
+
+      # - name: Run e2e tests
+      #   run: npm run test:e2e
+
+      - name: Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} 
+
+      # NOTE: If CI 'Test' Run Failed then Send Notification to Slack
+      - name: Test Failure Comment Notification
+        uses: actions/github-script@v5.1.0
+        with:
+          github-token: ${{github.token}}
+          script: |
+            const ref = "${{github.ref}}"
+            const pull_number = Number(ref.split("/")[2])
+            await github.pulls.createReview({
+              ...context.repo,
+              pull_number,
+              body:"Check your test",
+              event: "REQUEST_CHANGES"
+            })
+        if: |
+          failure() && github.event_name == 'pull_request'
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ Checkout repository
+        uses: actions/checkout@v2
+
+      - name: 📦 Setup Node.js for use with actions
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: ⏳ Install node modules
+        run: yarn ci
+
+      - name: 🥾 Run linter
+        run: yarn lint
+
+  ## If you use deployment flow then enabled this options
+  # build:
+  #   name: Build
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: ✅ Checkout repository
+  #       uses: actions/checkout@v2
+
+  #     - name: 📦 Setup Node.js for use with actions
+  #       uses: actions/setup-node@v1.1.0
+  #       with:
+  #         version: '12.x'
+
+  #     - name: ⏳ Install node modules
+  #       run: npm run ci
+
+  #     - name: 🥾 Create production build
+  #       run: npm run build
+
+  #     # Upload the build so that we can use it later
+  #     - name: 🕋 Upload build folder
+  #       uses: actions/upload-artifact@v1
+  #       with:
+  #         name: build
+  #         path: build
+
+  # deploy:
+  #   name: Deploy
+  #   # Only deploy if these other jobs have completed successfully
+  #   needs: [test, lint, build]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: ✅ Checkout repository
+  #       uses: actions/checkout@v2
+
+  #     # Download the build folder from the earlier job and use it to deploy
+  #     - name: ⏳ Download build folder
+  #       uses: actions/download-artifact@v1
+  #       with:
+  #         name: build
+
+  #     # Deploy to github pages
+  #     - name: 🗺️ Deploy build
+  #       uses: JamesIves/github-pages-deploy-action@releases/v3
+  #       with:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+  #         BRANCH: gh-pages
+  #         FOLDER: build
+
+  changelog:
+    name: ChangeLog
+    # needs: [test, lint, build, deploy]
+    needs: [test, lint]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: ${{steps.github_release.outputs.changelog}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

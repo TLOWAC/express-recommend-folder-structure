@@ -1,0 +1,15 @@
+name: "[ Github Action ] Labeler"
+on: [pull_request]
+
+jobs:
+  label:
+    name: "Label"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🔖 Label
+      uses: actions/labeler@v3
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        configuration-path: ".github/workflows/config/labeler-config.yml"
+        sync-labels: true

@@ -1,0 +1,39 @@
+name: "🚀 Feature Request"
+title: "[ Feat ]: "
+description: "I have a specific suggestion for This REPO !!!"
+labels: ["TLOWAC: you must be love this", "TLOWAC: you may be love this"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to suggest a new feature! Please fill out this form as completely as possible.
+
+  - type: checkboxes
+    id: input1
+    attributes:
+      label: "💻"
+      description: |
+        Check this if you would like to implement a PR, we are more than happy to help you go through the process
+      options:
+        - label: Would you like to work on this feature?
+
+  - type: textarea
+    attributes:
+      label: What problem are you trying to solve?
+      description: |
+        A concise description of what the problem is.
+      placeholder: |
+        I have an issue when [...]
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Describe the solution you'd like
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Describe alternatives you've considered
+    validations:
+      required: true

@@ -1,0 +1,30 @@
+# Check if this `.codecov.yml` file is valid by running in local: 
+# curl -X POST --data-binary @.codecov.yml https://codecov.io/validate
+
+codecov:
+  token: ${{ secrets.CODECOV_TOKEN }}
+  require_ci_to_pass: true
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+  status:
+    project:
+      default:
+        threshold: 0%
+        target: auto
+    patch: false
+
+parsers:
+  gcov:
+    branch_detection:
+      conditional: yes
+      loop: yes
+      method: no
+      macro: no
+      
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: false

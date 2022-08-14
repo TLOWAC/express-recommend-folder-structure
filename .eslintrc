@@ -1,0 +1,55 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["airbnb-base", "plugin:@typescript-eslint/recommended", "plugin:import/recommended"],
+  "plugins": ["@typescript-eslint", "prettier", "import"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {
+    // ----------- About Custom Eslint -----------
+
+    // NOTE: prettier 설정과 다른 경우 error
+    "prettier/prettier": ["error"],
+    // NOTE: 익명함수를 리턴하는 경우 error
+    "import/prefer-default-export": "off",
+
+    // ----------- About airbnb-base -----------
+
+    // NOTE: 따옴표 사용시 " 와 ` 만 허용하는 설정. ( airbnb-base/recommand 에는 " 로 설정됨 )
+    "quotes": ["error", "double", { "allowTemplateLiterals": true }],
+    // NOTE: console.log 사용시 warning ( airbnb-base/recommand 에는 허용으로 설정됨 )
+    "no-console": ["warn"],
+
+    // ----------- About @typescript-eslint -----------
+
+    // NOTE: 함수를 리턴하는 경우 함수 타입을 필수로 리턴하도록 하지 않는 설정 ( @typescript-eslint/recommand 에는 필수로 설정됨 )
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+
+    // ----------- About eslint-plugin-import -----------
+
+    // NOTE: import 하는 모듈 정렬
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", ["parent", "sibling"], "index"],
+        "pathGroups": [
+          {
+            "pattern": "", // => ex. "pattern" : "tlowac"
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "newlines-between": "always"
+      }
+    ]
+  }
+}
